@@ -1,44 +1,76 @@
-// src/routes/AppRouter.tsx
-import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ProtectedRoute from './ProtectedRoute';
+import Login from '@/pages/Login';
+import Dashboard from '@/pages/Dashboard';
+import Deposit from '@/pages/Deposit';
+import Withdraw from '@/pages/Withdraw';
+import History from '@/pages/History';
+import Watchlist from '@/pages/Watchlist';
+import Settings from '@/pages/Settings';
+import NotFound from '@/pages/NotFound';
+import { AuthProvider } from '../context/AuthContext.tsx';
+import ProtectedRoute from './ProtectedRoute.tsx';
 
-// Lazy-loaded pages
-const Login = lazy(() => import('@/pages/Login'));
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
-const Deposit = lazy(() => import('@/pages/Deposit'));
-const Withdraw = lazy(() => import('@/pages/Withdraw'));
-const History = lazy(() => import('@/pages/History'));
-const Watchlist = lazy(() => import('@/pages/Watchlist'));
-const Settings = lazy(() => import('@/pages/Settings'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
+function App() {
 
-function Loader() {
-  return <div style={{ padding: 24 }}>Loading…</div>;
-}
-
-export default function AppRouter() {
   return (
-    <BrowserRouter /* basename={import.meta.env.BASE_URL} */>
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {/* Public */}
-          <Route path="/" element={<Login />} />
+    <BrowserRouter>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Login />} />
 
-          {/* Protected */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/deposit" element={<Deposit />} />
-            <Route path="/withdraw" element={<Withdraw />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/watchlist" element={<Watchlist />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-
-          {/* 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/deposit"
+          element={
+            <ProtectedRoute>
+              <Deposit/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/withdraw"
+          element={
+            <ProtectedRoute>
+              <Withdraw />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/watchlist"
+          element={
+            <ProtectedRoute>
+              <Watchlist /> 
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings /> 
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
+
+export default App;

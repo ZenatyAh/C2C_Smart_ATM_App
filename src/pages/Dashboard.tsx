@@ -1,4 +1,19 @@
-// src/pages/Dashboard.tsx
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 export default function Dashboard() {
-  return <div style={{ padding: 24 }}>Dashboard</div>;
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); 
+    navigate('/'); 
+  };
+
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
 }
