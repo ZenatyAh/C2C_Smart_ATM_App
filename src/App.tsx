@@ -1,6 +1,8 @@
 import './App.css'
-import AppRouter from '@/routes/AppRouter';
+// import AppRouter from '@/routes/AppRouter';
 
 export default function App() {
-  return <AppRouter />;
+  return (
+    <h1>ahmed</h1>
+  );
 }
