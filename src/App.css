@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+    --radius: 0.65rem;
+
+    /* Light mode */
+    --color-background: #ffffff;
+    --color-foreground: #242424;
+
+    --color-card: #ffffff;
+    --color-card-foreground: #242424;
+
+    --color-popover: #ffffff;
+    --color-popover-foreground: #242424;
+
+    --color-primary: #2fa66a;
+    --color-primary-foreground: #f8fce7;
+
+    --color-secondary: #f7f7fb;
+    --color-secondary-foreground: #333344;
+
+    --color-muted: #f7f7fb;
+    --color-muted-foreground: #8a8a9e;
+
+    --color-accent: #f7f7fb;
+    --color-accent-foreground: #333344;
+
+    --color-destructive: #d64a2b;
+
+    --color-border: #e8e8f0;
+    --color-input: #e8e8f0;
+    --color-ring: #c9e04d;
+
+    --color-chart-1: #7ee68a;
+    --color-chart-2: #54d87b;
+    --color-chart-3: #3ebc6d;
+    --color-chart-4: #2f9c5c;
+    --color-chart-5: #257b4d;
+
+    --color-sidebar: #fbfbfb;
+    --color-sidebar-foreground: #242424;
+    --color-sidebar-primary: #2fa66a;
+    --color-sidebar-primary-foreground: #f8fce7;
+    --color-sidebar-accent: #f7f7fb;
+    --color-sidebar-accent-foreground: #333344;
+    --color-sidebar-border: #e8e8f0;
+    --color-sidebar-ring: #c9e04d;
+}
+
+/* Dark mode */
+@theme .dark {
+    --color-background: #232326;
+    --color-foreground: #fafafa;
+
+    --color-card: #35353a;
+    --color-card-foreground: #fafafa;
+
+    --color-popover: #35353a;
+    --color-popover-foreground: #fafafa;
+
+    --color-primary: #2fa66a;
+    --color-primary-foreground: #f8fce7;
+
+    --color-secondary: #46464b;
+    --color-secondary-foreground: #fafafa;
+
+    --color-muted: #46464b;
+    --color-muted-foreground: #a3a3b0;
+
+    --color-accent: #46464b;
+    --color-accent-foreground: #fafafa;
+
+    --color-destructive: #c85e3a;
+
+    --color-border: #ffffff1a;
+    --color-input: #ffffff26;
+    --color-ring: #4a8f4e;
+
+    --color-chart-1: #7ee68a;
+    --color-chart-2: #54d87b;
+    --color-chart-3: #3ebc6d;
+    --color-chart-4: #2f9c5c;
+    --color-chart-5: #257b4d;
+
+    --color-sidebar: #35353a;
+    --color-sidebar-foreground: #fafafa;
+    --color-sidebar-primary: #3bcc7c;
+    --color-sidebar-primary-foreground: #f8fce7;
+    --color-sidebar-accent: #46464b;
+    --color-sidebar-accent-foreground: #fafafa;
+    --color-sidebar-border: #ffffff1a;
+    --color-sidebar-ring: #4a8f4e;
+}
