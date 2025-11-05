@@ -1,7 +1,8 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { User } from "../utils/types";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 export default function Login() {
@@ -12,6 +13,13 @@ export default function Login() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,7 +48,7 @@ export default function Login() {
       }
       localStorage.setItem("user", JSON.stringify(found));
       login(found);
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     } catch (err: unknown) {
       const msg =
         err instanceof Error ? err.message : "An unexpected error occurred.";
@@ -52,9 +60,8 @@ export default function Login() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-background text-foreground transition-colors duration-500 relative">
-     
       <section className="w-full max-w-sm rounded-[var(--radius)] shadow-lg p-8 bg-card border border-border">
-        <h1 className="dark text-3xl font-bold mb-8 text-center text-primary">
+        <h1 className="text-3xl font-bold mb-8 text-center text-primary">
           Smart ATM Login
         </h1>
 
@@ -102,7 +109,7 @@ export default function Login() {
           </div>
 
           {error && (
-            <p className="dark text-destructive text-sm text-center font-medium">
+            <p className="text-destructive text-sm text-center font-medium">
               {error}
             </p>
           )}
