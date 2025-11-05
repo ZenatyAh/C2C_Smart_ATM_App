@@ -46,7 +46,7 @@ export default function Login() {
         setError("Invalid username or PIN.");
         return;
       }
-
+      localStorage.setItem("user", JSON.stringify(found));
       login(found);
       navigate("/dashboard", { replace: true });
     } catch (err: unknown) {
