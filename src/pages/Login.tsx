@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { User } from "../utils/types";
-
+import { useToast } from "@/context/ToastContext"; 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 export default function Login() {
@@ -10,9 +10,9 @@ export default function Login() {
   const [pin, setPin] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast(); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -44,10 +44,12 @@ export default function Login() {
 
       if (!found) {
         setError("Invalid username or PIN.");
+        showToast("Invalid username or PIN.", "error"); 
         return;
       }
       localStorage.setItem("user", JSON.stringify(found));
       login(found);
+      showToast(`Welcome back, ${found.first_name}!`, "success"); 
       navigate("/dashboard", { replace: true });
     } catch (err: unknown) {
       const msg =
