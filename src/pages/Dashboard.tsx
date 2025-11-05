@@ -1,7 +1,9 @@
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const userData = JSON.parse(localStorage.getItem('user'));
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -35,6 +37,7 @@ const [users, setUsers] = useState([]);
   return (
     <>
     <div>
+      ` Welcome {userData.user_name}`
       <h1>Dashboard</h1>
       <button onClick={handleLogout}>Logout</button>
     </div>

@@ -9,12 +9,14 @@ import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '../context/AuthContext.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
+import ThemeToggle from "@/components/ThemeToggle.tsx";
 
 function App() {
 
   return (
     <BrowserRouter>
     <AuthProvider>
+      <ThemeToggle />
       <Routes>
         <Route path="/" element={<Login />} />
 
