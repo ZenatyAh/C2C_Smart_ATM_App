@@ -8,7 +8,6 @@ import BirthdayModal from "../components/BirthdayModal";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
-// اقرأ أحدث نسخة من localStorage وطبّع userId لو كان id فقط
 function getStoredUser(): User | null {
   try {
     const raw = localStorage.getItem("user");
