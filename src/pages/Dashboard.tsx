@@ -44,6 +44,9 @@ const [users, setUsers] = useState([]);
 
       <h2>💰 Transactions:</h2>
       <pre>{JSON.stringify(transactions, null, 2)}</pre>
+    <h1 className="text-3xl font-bold underline">
+    Hello world!
+  </h1>
     </div>
     </>
   );

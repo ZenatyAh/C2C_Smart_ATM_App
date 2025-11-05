@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-
+import type {User} from '../utils/types'
 type AuthContextType = {
   isLoggedIn: boolean;
-  login: () => void;
+  login: (found : User) => void;
   logout: () => void;
 };
 
