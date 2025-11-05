@@ -39,7 +39,9 @@ const [users, setUsers] = useState([]);
     <div>
       ` Welcome {userData.user_name}`
       <h1>Dashboard</h1>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}
+            className="fixed top-5 right-30 z-50 px-3 py-1.5 rounded-[var(--radius)] bg-secondary text-secondary-foreground border border-border hover:bg-accent hover:text-accent-foreground transition-all shadow-sm"
+      >Logout</button>
     </div>
      <div style={{ padding: 20 }}>
       <h2>📊 Users:</h2>
