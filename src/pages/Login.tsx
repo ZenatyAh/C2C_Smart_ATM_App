@@ -2,7 +2,9 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { User } from "../utils/types";
-import { useToast } from "@/context/ToastContext"; 
+import { useToast } from "@/context/ToastContext";
+import { useAccount } from "@/context/AccountContext";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 export default function Login() {
@@ -10,15 +12,16 @@ export default function Login() {
   const [pin, setPin] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const { showToast } = useToast(); 
 
+  const { login } = useAuth();                 
+  const { loadUser } = useAccount();          
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
+  // لو في session محفوظة، ادخل مباشرة للداشبورد
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      navigate("/dashboard", { replace: true });
-    }
+    if (storedUser) navigate("/dashboard", { replace: true });
   }, [navigate]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -28,14 +31,18 @@ export default function Login() {
     const trimmedUser = username.trim();
     const trimmedPin = pin.trim();
     if (!trimmedUser || !trimmedPin) {
-      setError("Please fill in all required fields.");
+      const msg = "Please fill in all required fields.";
+      setError(msg);
+      showToast(msg, "error");
       return;
     }
 
     try {
       setLoading(true);
+
       const res = await fetch(`${BASE_URL}users`);
       if (!res.ok) throw new Error("Failed to connect to the server.");
+
       const users: User[] = await res.json();
 
       const found = users.find(
@@ -43,18 +50,31 @@ export default function Login() {
       );
 
       if (!found) {
-        setError("Invalid username or PIN.");
-        showToast("Invalid username or PIN.", "error"); 
+        const msg = "Invalid username or PIN.";
+        setError(msg);
+        showToast(msg, "error");
         return;
       }
-      localStorage.setItem("user", JSON.stringify(found));
-      login(found);
-      showToast(`Welcome back, ${found.first_name}!`, "success"); 
+
+      const normalized: User = {
+        ...found,
+        userId: (found as any).userId ?? (found as any).id,
+      };
+
+      localStorage.setItem("user", JSON.stringify(normalized));
+
+      login(found); 
+
+      //  (مهم!)
+      await loadUser(normalized);
+
+      showToast(`Welcome back, ${normalized.first_name}!`, "success");
       navigate("/dashboard", { replace: true });
     } catch (err: unknown) {
       const msg =
         err instanceof Error ? err.message : "An unexpected error occurred.";
       setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }
