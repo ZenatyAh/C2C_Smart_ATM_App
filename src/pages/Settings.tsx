@@ -176,15 +176,35 @@ export default function Settings() {
   return (
     <div className="min-h-[calc(100dvh-0px)] bg-background text-foreground">
       <div className="max-w-3xl mx-auto p-4 space-y-6">
-        <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Settings</h1>
-          <button
-            onClick={handleLogout}
-            className="px-3 py-2 rounded-[var(--radius)] border border-border bg-card shadow-sm text-sm"
-          >
-            Logout
-          </button>
+        <header className="grid grid-cols-2 items-center gap-2 sm:grid-cols-3 pr-16 sm:pr-0">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="px-3 py-2 rounded-[var(--radius)] border border-border bg-card shadow-sm text-sm justify-self-start"
+            >
+              ← Back
+            </button>
+
+            
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-[var(--radius)] border border-border bg-card shadow-sm text-sm justify-self-end"
+            >
+              Logout
+            </button>
+
+            
+            <h1
+              className="
+                col-span-2 row-start-2 text-2xl font-semibold text-center
+                sm:col-span-1 sm:row-start-auto sm:justify-self-center
+              "
+            >
+              Settings
+            </h1>
         </header>
+
+
+
 
         <section className="rounded-[var(--radius)] border border-border bg-card p-4 shadow-sm space-y-3">
           <div className="text-sm text-muted-foreground">
