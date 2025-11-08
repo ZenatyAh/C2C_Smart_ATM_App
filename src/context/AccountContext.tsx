@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useEffect } from "react";
 import type { User, Transaction } from "../utils/types";
 
 interface AccountState {
@@ -101,6 +101,18 @@ function reducer(state: AccountState, action: Action): AccountState {
 export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  ///
+  useEffect(() => {
+    if (state.user) {
+      const updatedUser: User = {
+        ...state.user,
+        balance: state.balance,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  }, [state.user, state.balance]);
+  ///
   async function loadUser(u: User) {
     dispatch({ type: "LOAD_START" });
 
