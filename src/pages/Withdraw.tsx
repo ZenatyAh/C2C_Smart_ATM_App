@@ -9,14 +9,16 @@ export default function Withdraw() {
 
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchUser = async () => {
       if (!user) {
         const stored = localStorage.getItem("user");
         if (!stored) {
-          navigate("/"); 
+          navigate("/");
           return;
         }
         await loadUser(JSON.parse(stored));
@@ -25,30 +27,37 @@ export default function Withdraw() {
     fetchUser();
   }, [user, loadUser, navigate]);
 
-  const handleWithdraw = async (e: React.FormEvent) => {
-    e.preventDefault();
 
+  useEffect(() => {
     const value = parseFloat(amount);
 
     if (isNaN(value) || value <= 0) {
-      showToast("Please enter a valid positive amount", "error");
+      setIsValid(false);
+      if (amount !== "") showToast("⚠️ Please enter a positive number", "error");
       return;
     }
 
     if (value > balance) {
-      showToast("❌ Insufficient balance", "error");
+      setIsValid(false);
+      showToast("⚠️ Insufficient balance for this withdrawal", "error");
       return;
     }
 
+    setIsValid(true);
+  }, [amount, balance]);
+
+  const handleWithdraw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = parseFloat(amount);
+
+    if (!isValid) return; 
+
     try {
       setLoading(true);
-
-    
       await withdraw(value);
-
       showToast(`✅ Withdrawn ${value} ILS successfully!`, "success");
       setAmount("");
-    } catch (err) {
+    } catch {
       showToast("❌ Withdrawal failed", "error");
     } finally {
       setLoading(false);
@@ -61,6 +70,7 @@ export default function Withdraw() {
         <h1 className="text-2xl font-semibold text-center text-foreground mb-6">
           💸 Withdraw Money
         </h1>
+
         <form onSubmit={handleWithdraw} className="space-y-5">
           <div>
             <label
@@ -81,7 +91,7 @@ export default function Withdraw() {
 
           <button
             type="submit"
-            disabled={loading || isLoading}
+            disabled={!isValid || loading || isLoading}
             className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-[var(--radius)] hover:bg-red-600 transition-colors disabled:opacity-50"
           >
             {loading ? "Processing..." : "Withdraw"}
