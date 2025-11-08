@@ -22,7 +22,7 @@ export default function History() {
     const fetchTransactions = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${BASE_URL}transactions`);
+        const res = await fetch(`${BASE_URL}transactions`); 
         const data: Transaction[] = await res.json();
 
         const userTxs = user?.userId ? data.filter(tx => tx.userId === user?.userId) : data;
