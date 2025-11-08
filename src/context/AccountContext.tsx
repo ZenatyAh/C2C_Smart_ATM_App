@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react";
 import type { User, Transaction } from "../utils/types";
 
 interface AccountState {
@@ -46,7 +46,7 @@ function reducer(state: AccountState, action: Action): AccountState {
         isLoading: false,
         user: action.payload.user,
         balance: action.payload.user.balance,
-        transactions: [],
+        transactions: [], 
       };
 
     case "LOAD_ERROR":
@@ -55,6 +55,8 @@ function reducer(state: AccountState, action: Action): AccountState {
     case "DEPOSIT": {
       const amount = action.payload;
       if (amount <= 0) return state;
+
+      const newBalance = state.balance + amount;
 
       const newTx: Transaction = {
         id: Date.now(),
@@ -67,7 +69,10 @@ function reducer(state: AccountState, action: Action): AccountState {
 
       return {
         ...state,
-        balance: state.balance + amount,
+        balance: newBalance,
+        user: state.user
+          ? { ...state.user, balance: newBalance }
+          : state.user,
         transactions: [newTx, ...state.transactions],
       };
     }
@@ -76,6 +81,8 @@ function reducer(state: AccountState, action: Action): AccountState {
       const amount = action.payload;
 
       if (amount <= 0 || amount > state.balance) return state;
+
+      const newBalance = state.balance - amount;
 
       const newTx: Transaction = {
         id: Date.now(),
@@ -88,7 +95,10 @@ function reducer(state: AccountState, action: Action): AccountState {
 
       return {
         ...state,
-        balance: state.balance - amount,
+        balance: newBalance,
+        user: state.user
+          ? { ...state.user, balance: newBalance }
+          : state.user,
         transactions: [newTx, ...state.transactions],
       };
     }
@@ -98,21 +108,36 @@ function reducer(state: AccountState, action: Action): AccountState {
   }
 }
 
-export function AccountProvider({ children }: { children: React.ReactNode }) {
+export function AccountProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  ///
-  useEffect(() => {
-    if (state.user) {
-      const updatedUser: User = {
-        ...state.user,
-        balance: state.balance,
-      };
-
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+ ///
+    useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      try {
+        const parsedUser: User = JSON.parse(stored);
+        dispatch({ type: "LOAD_SUCCESS", payload: { user: parsedUser } });
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+        localStorage.removeItem("user");
+      }
     }
+  }, []);
+
+  useEffect(() => {
+    if (!state.user) return;
+
+    const updatedUser: User = {
+      ...state.user,
+      balance: state.balance,
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   }, [state.user, state.balance]);
-  ///
+
+
+ ///
   async function loadUser(u: User) {
     dispatch({ type: "LOAD_START" });
 
