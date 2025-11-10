@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { User } from "@/utils/types";
 import { useToast } from "@/context/ToastContext";
 import { useAuth } from "@/context/AuthContext";
+import { useAccount } from "../context/AccountContext";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -43,7 +44,7 @@ export default function Settings() {
   const [busy, setBusy] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const { loadUser } = useAccount();
   const saveAndSetUser = (u: any) => {
     const normalized: User = {
       ...u,
@@ -51,6 +52,7 @@ export default function Settings() {
     };
     localStorage.setItem("user", JSON.stringify(normalized));
     setUser(normalized);
+    loadUser(normalized);
   };
   const fetchUserById = useCallback(async (uid: number) => {
     const res = await fetch(`${BASE_URL}users/${uid}`);
@@ -197,6 +199,8 @@ export default function Settings() {
         replace: true,
         state: { justReset: true, newBalance: 0 },
       });
+      
+      
     } catch (e: any) {
       showToast(e?.message ?? "Failed to reset account.", "error");
     } finally {
@@ -204,8 +208,9 @@ export default function Settings() {
     }
   }
 
+
   function handleLogout() {
-    authLogout(); // يحدث isLoggedIn في AuthContext
+    authLogout();
     localStorage.removeItem("user");
     showToast("Logged out.", "info");
     navigate("/", { replace: true });
