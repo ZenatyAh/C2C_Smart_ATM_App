@@ -105,18 +105,69 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: "LOAD_START" });
 
     try {
-      await new Promise((r) => setTimeout(r, 300)); // simulate delay
+      await new Promise((r) => setTimeout(r, 300)); 
       dispatch({ type: "LOAD_SUCCESS", payload: { user: u } });
     } catch (err) {
       dispatch({ type: "LOAD_ERROR", payload: "Failed to load user" });
     }
   }
 
-  const deposit = (amount: number) =>
-    dispatch({ type: "DEPOSIT", payload: amount });
+  const deposit = async (amount: number) => {
+  if (!state.user) throw new Error("User not loaded");
 
-  const withdraw = (amount: number) =>
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/${state.user.userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          balance: state.balance + amount,
+        }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to update balance");
+
+    const updatedUser = await res.json();
+
+    dispatch({ type: "DEPOSIT", payload: amount });
+  } catch (err) {
+    console.error("Deposit API Error:", err);
+    throw err;
+  }
+};
+
+
+  const withdraw = async (amount: number) => {
+  if (!state.user) throw new Error("User not loaded");
+  if (amount <= 0 || amount > state.balance) throw new Error("Invalid amount");
+
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/${state.user.userId}`,
+      {
+        method: "PUT", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          balance: state.balance - amount, 
+        }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to update balance");
+
+    const updatedUser = await res.json();
     dispatch({ type: "WITHDRAW", payload: amount });
+  } catch (err) {
+    console.error("Withdraw API Error:", err);
+    throw err;
+  }
+};
 
   return (
     <AccountContext.Provider
