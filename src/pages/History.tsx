@@ -19,6 +19,12 @@ export default function History() {
   const limit = 5;
   useEffect(() => {
     const fetchTransactions = async () => {
+      
+       if (!user?.userId) {
+      setTransactions([]);
+      setLoading(false);
+      return;
+    }
       setLoading(true);
       try {
         const params = new URLSearchParams();
