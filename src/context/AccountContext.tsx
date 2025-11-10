@@ -153,13 +153,12 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   if (!state.user) throw new Error("User not loaded");
 
   try {
+  
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/users/${state.user.userId}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           balance: state.balance + amount,
         }),
@@ -170,7 +169,22 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
     const updatedUser = await res.json();
 
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/transactions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: state.user.userId,
+        type: "Deposit",
+        amount,
+        currency: "ILS",
+        date: new Date().toISOString(),
+      }),
+    });
+
     dispatch({ type: "DEPOSIT", payload: amount });
+
+    window.dispatchEvent(new Event("transactionsUpdated"));
+
   } catch (err) {
     console.error("Deposit API Error:", err);
     throw err;
@@ -186,12 +200,10 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/users/${state.user.userId}`,
       {
-        method: "PUT", 
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          balance: state.balance - amount, 
+          balance: state.balance - amount,
         }),
       }
     );
@@ -199,12 +211,27 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     if (!res.ok) throw new Error("Failed to update balance");
 
     const updatedUser = await res.json();
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/transactions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: state.user.userId,
+        type: "Withdraw",
+        amount,
+        currency: "ILS",
+        date: new Date().toISOString(),
+      }),
+    });
+
     dispatch({ type: "WITHDRAW", payload: amount });
+    window.dispatchEvent(new Event("transactionsUpdated"));
+
   } catch (err) {
     console.error("Withdraw API Error:", err);
     throw err;
   }
 };
+
 
   return (
     <AccountContext.Provider
