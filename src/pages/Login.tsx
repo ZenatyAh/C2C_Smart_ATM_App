@@ -13,16 +13,16 @@ export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const { login } = useAuth();                 
+  const { login , isLoggedIn } = useAuth();                 
   const { loadUser } = useAccount();          
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  // لو في session محفوظة، ادخل مباشرة للداشبورد
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) navigate("/dashboard", { replace: true });
-  }, [navigate]);
+   useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
