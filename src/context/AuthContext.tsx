@@ -21,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () =>{ 
     setIsLoggedIn(false);
     localStorage.setItem('isLoggedIn','false')
+    localStorage.removeItem('user')
   }
 
   return (
