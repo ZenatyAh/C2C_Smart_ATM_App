@@ -1,11 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
+import type {CurrencyCode ,Currency , WatchlistContextValue } from '../utils/types'
 
-type CurrencyCode = "USD" | "EUR" | "JOD";
-
-interface Currency {
-  code: CurrencyCode;
-  rate: number;
-}
 
 const CURRENCY_DATA: Currency[] = [
   { code: "USD", rate: 3.7 },
@@ -13,12 +8,7 @@ const CURRENCY_DATA: Currency[] = [
   { code: "JOD", rate: 5.2 },
 ];
 
-interface WatchlistContextValue {
-  currencies: Currency[];
-  watchlist: CurrencyCode[]; 
-  toggleWatchlist: (code: CurrencyCode) => void;
-  isInWatchlist: (code: CurrencyCode) => boolean;
-}
+
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 

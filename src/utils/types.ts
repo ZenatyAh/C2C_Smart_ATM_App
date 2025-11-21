@@ -45,3 +45,30 @@ export interface AccountContextType {
   withdraw: (amount: number) => Promise<void> | void;
 }
 
+export type AuthContextType = {
+  isLoggedIn: boolean;
+  login: (found : User) => void;
+  logout: () => void;
+};
+
+export type ToastType = "success" | "error" | "info";
+
+export type Toast = {
+  id: number;
+  message: string;
+  type: ToastType;
+};
+
+export type CurrencyCode = "USD" | "EUR" | "JOD";
+
+export interface Currency {
+  code: CurrencyCode;
+  rate: number;
+}
+
+export interface WatchlistContextValue {
+  currencies: Currency[];
+  watchlist: CurrencyCode[]; 
+  toggleWatchlist: (code: CurrencyCode) => void;
+  isInWatchlist: (code: CurrencyCode) => boolean;
+}
