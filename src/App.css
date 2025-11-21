@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+
 @theme {
     --radius: 0.65rem;
 
