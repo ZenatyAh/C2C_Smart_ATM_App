@@ -1,10 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { ReactNode } from 'react';
-
-type protectedRouteProps = {
-  children : ReactNode
-}
+import type {protectedRouteProps} from '../utils/types'
 
 export default function ProtectedRoute ({children} : protectedRouteProps) {
   const {isLoggedIn} = useAuth();

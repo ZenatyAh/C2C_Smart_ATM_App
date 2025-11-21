@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface Transaction {
   id: number;
   userId: number;
@@ -71,4 +73,9 @@ export interface WatchlistContextValue {
   watchlist: CurrencyCode[]; 
   toggleWatchlist: (code: CurrencyCode) => void;
   isInWatchlist: (code: CurrencyCode) => boolean;
+}
+
+
+export type protectedRouteProps = {
+  children : ReactNode
 }
