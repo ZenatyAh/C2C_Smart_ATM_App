@@ -12,64 +12,71 @@ import ProtectedRoute from './ProtectedRoute.tsx';
 import ThemeToggle from "@/components/ThemeToggle.tsx";
 
 function App() {
+const routes = [
+  {
+    name:'login',
+    path: "/",
+    element:<Login/>
+  },
+  {
+    name:'dashboard',
+    path:'/dashboard',
+    element:<Dashboard/>
+  },
+  {
+    name:'deposit',
+    path:'/deposit',
+    element:<Deposit/>
+  },
+  {
+    name:'withdraw',
+    path:'/withdraw',
+    element:<Withdraw/>
+  },
+  {
+    name:'history',
+    path:'/history',
+    element:<History/>,
+  },
+  {
+    name:'watchlist',
+    path:'/watchlist',
+    element:<Watchlist/>
+  },
+  {
+    name:'settings',
+    path:'/settings',
+    element:<Settings/>
+  },
+  {
+    name:'Not-Found',
+    path:'*',
+    element:<NotFound/>
+  }
+]
+
+const routComponents = routes.map((route) => {
+ return(
+  <Route 
+  key={route.name} 
+  path={route.path}
+  element={
+    <ProtectedRoute>
+      {route.element}
+    </ProtectedRoute>
+  }
+  >
+  </Route>
+ );
+})
 
   return (
     <BrowserRouter>
     <AuthProvider>
       <ThemeToggle />
-      <Routes>
-        <Route path="/" element={<Login />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard/>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/deposit"
-          element={
-            <ProtectedRoute>
-              <Deposit/>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/withdraw"
-          element={
-            <ProtectedRoute>
-              <Withdraw />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/history"
-          element={
-            <ProtectedRoute>
-              <History />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/watchlist"
-          element={
-            <ProtectedRoute>
-              <Watchlist /> 
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Settings /> 
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+        <Routes>
+          {routComponents}
+        </Routes>
       </AuthProvider>
     </BrowserRouter>
   );
