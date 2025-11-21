@@ -1,31 +1,7 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react";
-import type { User, Transaction } from "../utils/types";
+import type { User, Transaction , Action , AccountState, AccountContextType} from "../utils/types";
 
-interface AccountState {
-  user: User | null;
-  balance: number;
-  transactions: Transaction[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-type Action =
-  | { type: "LOAD_START" }
-  | { type: "LOAD_SUCCESS"; payload: { user: User } }
-  | { type: "LOAD_ERROR"; payload: string }
-  | { type: "DEPOSIT"; payload: number }
-  | { type: "WITHDRAW"; payload: number };
-
-const AccountContext = createContext<{
-  user: User | null;
-  balance: number;
-  transactions: Transaction[];
-  isLoading: boolean;
-  error: string | null;
-  loadUser: (u: User) => Promise<void>;
-  deposit: (amount: number) => void;
-  withdraw: (amount: number) => void;
-} | null>(null);
+const AccountContext = createContext<AccountContextType | null>(null);
 
 const initialState: AccountState = {
   user: null,
