@@ -1,12 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-
-type ToastType = "success" | "error" | "info";
-
-type Toast = {
-  id: number;
-  message: string;
-  type: ToastType;
-};
+import type {ToastType , Toast} from '../utils/types'
 
 const ToastContext = createContext<{
   toasts: Toast[];
